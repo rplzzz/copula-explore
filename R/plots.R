@@ -10,3 +10,14 @@ scatterplot_mat <- function(pts)
         ggplot2::xlab(latex2exp::TeX('X_1')) + ggplot2::ylab(latex2exp::TeX('X_2')) +
         ggplot2::theme_bw()
 }
+
+## Todo:  find a way to change the label from "Cor" to "tau"
+pairplot_mat <- function(pts)
+{
+    if(is.null(colnames(pts))) {
+        colnames(pts) <- paste0('X', seq(1, ncol(pts)))
+    }
+    ptsdf <- as.data.frame(pts)
+    GGally::ggpairs(ptsdf, upper=list(continuous=GGally::wrap(GGally::ggally_cor, method='kendall'))) + 
+        ggplot2::theme_bw()
+}
