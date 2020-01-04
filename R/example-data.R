@@ -23,4 +23,17 @@ exampdata_2d <- function(cor=1/sqrt(2), df=Inf)
     list(X1=examp1, X2=examp2)
 }
 
-    
+### Create a correlated extreme value time series by taking maxima over a series of
+### multivariate normals
+evts <- function(cormat = matrix(c(1,0.5,0.5,1), nrow=2), n = 1200, grp=12) {
+    basets <- MASS::mvrnorm(n, rep(0, nrow(cormat)), cormat)
+    group <- seq(0, n-1) %/% grp
+    x <- 
+        t(
+            sapply(split(as.data.frame(basets), group),  # preserve columns; split on a matrix collapses them
+                   function(d) {
+                       apply(as.matrix(d), 2, max)
+                   })
+        )
+    sweep(x, 2, colMeans(x))
+}
